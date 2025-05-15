@@ -1,0 +1,55 @@
+name: Email Digest Workflow
+
+on:
+  schedule:
+    # Run at 5 AM UTC for morning digest
+    - cron: '0 5 * * *'
+    # Run at 8 PM UTC for evening digest
+    - cron: '0 20 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  email-digest:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Determine digest period
+        id: determine-period
+        run: |
+          HOUR=$(date +%H)
+          if [ $HOUR -lt 12 ]; then
+            echo "period=morning" >> $GITHUB_OUTPUT
+          else
+            echo "period=evening" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          GMAIL_USER=${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          TEAM_RECIPIENTS=${{ secrets.TEAM_RECIPIENTS }}
+          MORNING_CUTOFF_HOURS=12
+          EVENING_CUTOFF_HOURS=12
+          MORNING_SCHEDULE=0 7 * * *
+          EVENING_SCHEDULE=0 21 * * *
+          OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4' }}
+          MAX_EMAILS_PER_DIGEST=50
+          EOF
+      
+      - name: Run Email Digest
+        run: python main.py --run-once --period ${{ steps.determine-period.outputs.period }}
