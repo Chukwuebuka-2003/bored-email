@@ -149,6 +149,9 @@ class EmailFetcher:
                 # Convert date string to datetime
                 try:
                     email_date = email.utils.parsedate_to_datetime(date_str)
+                    # Ensure the datetime is offset-aware
+                    if email_date.tzinfo is None:
+                        email_date = email_date.replace(tzinfo=timezone.utc)
                 except:
                     email_date = datetime.now(timezone.utc)
                 
@@ -256,6 +259,9 @@ class EmailFetcher:
                         date_str = msg['Date']
                         try:
                             email_date = email.utils.parsedate_to_datetime(date_str)
+                            # Ensure the datetime is offset-aware
+                            if email_date.tzinfo is None:
+                                email_date = email_date.replace(tzinfo=timezone.utc)
                         except:
                             email_date = datetime.now(timezone.utc)
                         
