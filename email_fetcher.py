@@ -2,7 +2,7 @@
 import os
 import base64
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 import email
 from email.header import decode_header
@@ -118,7 +118,7 @@ class EmailFetcher:
             raise ValueError("Gmail API service not initialized")
             
         # Calculate time N hours back from now
-        time_back = datetime.now() - timedelta(hours=hours_back)
+        time_back = datetime.now(timezone.utc) - timedelta(hours=hours_back)
         query = f"after:{int(time_back.timestamp())}"
         
         # Get message list
@@ -150,7 +150,7 @@ class EmailFetcher:
                 try:
                     email_date = email.utils.parsedate_to_datetime(date_str)
                 except:
-                    email_date = datetime.now()
+                    email_date = datetime.now(timezone.utc)
                 
                 # Extract recipients
                 to_field = next((h['value'] for h in headers if h['name'].lower() == 'to'), '')
@@ -204,7 +204,7 @@ class EmailFetcher:
             mail.select('inbox')
             
             # Calculate time N hours back from now
-            time_back = datetime.now() - timedelta(hours=hours_back)
+            time_back = datetime.now(timezone.utc) - timedelta(hours=hours_back)
             date_string = time_back.strftime('%d-%b-%Y')
             
             # Search for emails
@@ -257,7 +257,7 @@ class EmailFetcher:
                         try:
                             email_date = email.utils.parsedate_to_datetime(date_str)
                         except:
-                            email_date = datetime.now()
+                            email_date = datetime.now(timezone.utc)
                         
                         # Extract recipients
                         to_header = msg['To']
