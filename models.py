@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict
-from datetime import datetime
+from datetime import datetime, timezone
 
 class EmailMessage(BaseModel):
     """Represents a single email message"""
@@ -25,9 +25,9 @@ class EmailSummary(BaseModel):
     
 class DigestReport(BaseModel):
     """Represents the compiled digest of email summaries"""
-    report_id: str = Field(default_factory=lambda: f"digest-{datetime.now().strftime('%Y%m%d-%H%M%S')}")
+    report_id: str = Field(default_factory=lambda: f"digest-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}")
     period: str  # "morning" or "evening"
-    date: datetime = Field(default_factory=datetime.now)
+    date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     email_count: int
     high_priority_count: int
     summaries: List[EmailSummary]
