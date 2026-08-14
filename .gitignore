@@ -1,0 +1,18 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local models / Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Gmail API auth artifacts
+token.json
+credentials.json
+
+# Runtime output
+email_digest.log
+*.log

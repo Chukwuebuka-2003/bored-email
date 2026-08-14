@@ -36,11 +36,18 @@ class Config(BaseModel):
     """Application configuration"""
     gmail_user: EmailStr
     gmail_app_password: str
-    openai_api_key: str
     team_recipients: List[EmailStr]
     morning_cutoff_hours: int = 12  # Hours to look back for morning report
     evening_cutoff_hours: int = 12  # Hours to look back for evening report
     morning_schedule: str = "0 7 * * *"  # 7 AM daily in cron format
     evening_schedule: str = "0 21 * * *"  # 9 PM daily in cron format
-    openai_model: str = "gpt-4"
     max_emails_per_digest: int = 50
+
+    # LLM settings. Defaults target a local LM Studio server (OpenAI-compatible
+    # API) so no email content ever leaves your machine. To use a remote model,
+    # set OPENAI_BASE_URL / OPENAI_API_KEY in your .env instead.
+    openai_base_url: str = "http://localhost:1234/v1"
+    openai_api_key: str = "lm-studio"  # LM Studio ignores this; used to satisfy the client
+    openai_model: str = "local-model"
+    llm_temperature: float = 0.2
+    llm_timeout: int = 300  # seconds; local inference can be slow

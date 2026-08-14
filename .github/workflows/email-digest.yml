@@ -40,12 +40,15 @@ jobs:
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TEAM_RECIPIENTS: ${{ secrets.TEAM_RECIPIENTS }}
           MORNING_CUTOFF_HOURS: 12
           EVENING_CUTOFF_HOURS: 12
           MORNING_SCHEDULE: "0 7 * * *"
           EVENING_SCHEDULE: "0 21 * * *"
-          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL || 'http://localhost:1234/v1' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'lm-studio' }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL || 'local-model' }}
+          LLM_TEMPERATURE: 0.2
+          LLM_TIMEOUT: 300
           MAX_EMAILS_PER_DIGEST: 50
         run: python main.py --run-once --period ${{ steps.determine-period.outputs.period }}
