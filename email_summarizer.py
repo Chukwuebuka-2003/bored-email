@@ -21,7 +21,7 @@ class EmailSummarizer:
         # (via its /v1 shim), vLLM, or the real OpenAI API — just point
         # `base_url` (and optionally `api_key`) at your server.
         self.client = OpenAI(
-            api_key=config.openai_api_key or "not-needed",
+            api_key=config.openai_api_key or "lm-studio",
             base_url=config.openai_base_url or None,
             timeout=config.llm_timeout,
             max_retries=2,
@@ -155,8 +155,11 @@ class EmailSummarizer:
                 # Continue with other emails if one fails
                 continue
 
-        # Sort summaries by priority (High > Medium > Low)
+        # Sort summaries by priority (High > Medium > Low), newest first within
+        # each priority. Python's sort is stable, so sorting by date first and
+        # then by priority preserves the date order for equal priorities.
         priority_order = {"High": 0, "Medium": 1, "Low": 2}
-        summaries.sort(key=lambda x: (priority_order.get(x.priority, 3), x.date), reverse=True)
+        summaries.sort(key=lambda x: x.date, reverse=True)
+        summaries.sort(key=lambda x: priority_order.get(x.priority, 3))
 
         return summaries
