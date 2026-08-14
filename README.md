@@ -26,6 +26,37 @@ flowchart TD
     A5 -- "Manages email sending" --> A2
 ```
 
+## Run with local models (LM Studio)
+
+EmailDigestApp talks to any OpenAI-compatible API, so you can summarize your
+email entirely on your own machine with [LM Studio](https://lmstudio.ai) and no
+data ever leaves your computer.
+
+1. Install and open LM Studio, download a model (e.g. `llama-3.2-3b-instruct`),
+   then start the local server (Developer tab → "Start Server"). It listens on
+   `http://localhost:1234/v1`.
+2. Copy `.env.example` to `.env` and set:
+   - `GMAIL_USER` / `GMAIL_APP_PASSWORD` / `TEAM_RECIPIENTS`
+   - `OPENAI_BASE_URL=http://localhost:1234/v1` (already the default)
+   - `OPENAI_MODEL` to the model identifier shown in LM Studio (not `local-model`)
+3. `pip install -r requirements.txt`
+4. Run once to test: `python main.py --run-once --period morning`
+5. Run the scheduler for recurring digests: `python main.py`
+
+Relevant environment variables:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `OPENAI_BASE_URL` | `http://localhost:1234/v1` | OpenAI-compatible endpoint (LM Studio, llama.cpp, Ollama `/v1`, vLLM, or OpenAI) |
+| `OPENAI_API_KEY` | `lm-studio` | API key; ignored by LM Studio, required for remote providers |
+| `OPENAI_MODEL` | `local-model` | Model identifier — set to the model loaded in LM Studio |
+| `LLM_TEMPERATURE` | `0.2` | Sampling temperature |
+| `LLM_TIMEOUT` | `300` | Seconds to wait for a response (local inference can be slow) |
+
+To switch back to a hosted model later, just set `OPENAI_BASE_URL=https://api.openai.com/v1`
+and your real `OPENAI_API_KEY`.
+
+
 Welcome to the first chapter of our journey into the world of `bored-email`! In this chapter, we will introduce the `EmailDigestApp`, a vital component of our project that simplifies the way we process and manage email digests.
 
 

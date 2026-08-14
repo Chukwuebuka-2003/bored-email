@@ -52,14 +52,17 @@ class EmailDigestApp:
             return Config(
                 gmail_user=os.getenv("GMAIL_USER"),
                 gmail_app_password=os.getenv("GMAIL_APP_PASSWORD"),
-                openai_api_key=os.getenv("OPENAI_API_KEY"),
                 team_recipients=team_recipients,
                 morning_cutoff_hours=int(os.getenv("MORNING_CUTOFF_HOURS", 12)),
                 evening_cutoff_hours=int(os.getenv("EVENING_CUTOFF_HOURS", 12)),
                 morning_schedule=os.getenv("MORNING_SCHEDULE", "0 7 * * *"),
                 evening_schedule=os.getenv("EVENING_SCHEDULE", "0 21 * * *"),
-                openai_model=os.getenv("OPENAI_MODEL", "gpt-4"),
-                max_emails_per_digest=int(os.getenv("MAX_EMAILS_PER_DIGEST", 50))
+                max_emails_per_digest=int(os.getenv("MAX_EMAILS_PER_DIGEST", 50)),
+                openai_base_url=os.getenv("OPENAI_BASE_URL", "http://localhost:1234/v1"),
+                openai_api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
+                openai_model=os.getenv("OPENAI_MODEL", "local-model"),
+                llm_temperature=float(os.getenv("LLM_TEMPERATURE", 0.2)),
+                llm_timeout=int(os.getenv("LLM_TIMEOUT", 300))
             )
         except Exception as e:
             logger.error(f"Error loading configuration: {str(e)}")
