@@ -1,3 +1,5 @@
+
+
 # EmailDigestApp
 
 ```mermaid
@@ -36,7 +38,7 @@ data ever leaves your computer.
    then start the local server (Developer tab → "Start Server"). It listens on
    `http://localhost:1234/v1`.
 2. Copy `.env.example` to `.env` and set:
-   - `GMAIL_USER` / `GMAIL_APP_PASSWORD` / `TEAM_RECIPIENTS`
+   - `GMAIL_USER` / `GMAIL_APP_PASSWORD` / `TEAM_RECIPIENTS` (`TEAM_RECIPIENTS` is a comma-separated list)
    - `OPENAI_BASE_URL=http://localhost:1234/v1` (already the default)
    - `OPENAI_MODEL` to the model identifier shown in LM Studio (not `local-model`)
 3. `pip install -r requirements.txt`
@@ -249,7 +251,7 @@ def __init__(self, env_path: str = ".env"):
 
 In the above code:
 - The `__init__` method of `EmailDigestApp` initializes the `BlockingScheduler`, which manages our scheduled jobs.
-- It sets up other components like the `EmailFetcher`, `EmailSummarizer`, and `EmailComposer` for later use.
+- It sets up other components like the `EmailFetcher`, the `EmailSummarizer`, and the `EmailComposer` for later use.
 
 ## Conclusion
 
@@ -908,4 +910,3 @@ In this code:
 In this chapter, we learned about the **Config** and how it serves as the configuration hub for the email digest application. By setting up the **Config** properly, you can customize your experience without diving deep into the code. This flexibility is essential for any user-friendly application!
 
 ---
-
